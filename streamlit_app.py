@@ -70,6 +70,6 @@ delta_margin = profit_margin - overall_profit_margin
 
 # Display metrics in three columns
 col1, col2, col3 = st.columns(3)
-col1.metric("Total Sales", f"${total_sales:, .2f}")
-col2.metric("Total Profit", f"${total_profit:, .2f}")
+col1.metric("Total Sales", f"${total_sales:,.2f}")
+col2.metric("Total Profit", f"${total_profit:,.2f}")
 col3.metric("Profit Margin", f"{profit_margin:.2%}", delta=f"{delta_margin:.2%}")
