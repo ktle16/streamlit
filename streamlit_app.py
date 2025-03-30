@@ -35,3 +35,41 @@ st.write("### (2) add a multi-select for Sub_Category *in the selected Category 
 st.write("### (3) show a line chart of sales for the selected items in (2)")
 st.write("### (4) show three metrics (https://docs.streamlit.io/library/api-reference/data/st.metric) for the selected items in (2): total sales, total profit, and overall profit margin (%)")
 st.write("### (5) use the delta option in the overall profit margin metric to show the difference between the overall average profit margin (all products across all categories)")
+
+# My additions
+
+# 1. Add drop down for Category
+selected_category = st.selectbox("Select a Category", df["Catgeory"].unique())
+
+# 2. Add a multi-select for Sub_Category within the selected_category
+subcategories = df[df["Catgeory"] == selected_category]["Sub_Category"].unique()
+selected_subcategories = st.multiselect("Select Sub_Category", subcategories)
+
+# Filter data based on selections
+if selected_subcategories:
+    df_selected = df[(df["Catgeory"] == selected_category) & (df["Sub_Category"].isin(selected_subcategories))]
+else:
+    df_selected = df[df["Catgeory"] == selected_category]
+
+# 3. Show a line chart of sales for the selected items
+# Reset index in case Order_Date is set as the index for grouping
+df_selected_reset = df_selected_reset_index()
+sales_over_time = df_selected_reset.groupby("Order_Date")["Sales"].sum().reset_index()
+st.line_chart(sales_over_time, x="Order_Date", y="Sales")
+
+# 4. Show three metrics dor the selected items: total sales, total profit, overall profit margin (%)
+total_sales = df_selected["Sales"].sum()
+total_profit = df_selected["Profit"].sum()
+profit_margin = total_profit / total_sales if total_sales != 0 else 0
+
+# 5. Use the delta option, comparing the selected profit margin and overall avg profit margin
+overall_sales = df["Sales"].sum()
+overall_profit = df["Profit"].sum()
+overall_profit_margin = overall_profit / overall_sales if overall_sales != 0 else 0
+delta_margin = profit_margin - overall_profit_margin
+
+# Display metrics in three columns
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Sales", f"${total_sales:, .2f}")
+col2.metric("Total Profit", f"${total_profit:, .2f}")
+col3.metric("Profit Margin", f"{profit_margin:.2%}", delta=f"{delta_margin:.2%}")
