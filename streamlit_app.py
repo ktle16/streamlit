@@ -53,7 +53,7 @@ else:
 
 # 3. Show a line chart of sales for the selected items
 # Reset index in case Order_Date is set as the index for grouping
-df_selected_reset = df_selected_reset_index()
+df_selected_reset = df_selected.reset_index()
 sales_over_time = df_selected_reset.groupby("Order_Date")["Sales"].sum().reset_index()
 st.line_chart(sales_over_time, x="Order_Date", y="Sales")
 
