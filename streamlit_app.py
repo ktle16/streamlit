@@ -39,17 +39,17 @@ st.write("### (5) use the delta option in the overall profit margin metric to sh
 # My additions
 
 # 1. Add drop down for Category
-selected_category = st.selectbox("Select a Category", df["Catgeory"].unique())
+selected_category = st.selectbox("Select a Category", df["Category"].unique())
 
 # 2. Add a multi-select for Sub_Category within the selected_category
-subcategories = df[df["Catgeory"] == selected_category]["Sub_Category"].unique()
+subcategories = df[df["Category"] == selected_category]["Sub_Category"].unique()
 selected_subcategories = st.multiselect("Select Sub_Category", subcategories)
 
 # Filter data based on selections
 if selected_subcategories:
-    df_selected = df[(df["Catgeory"] == selected_category) & (df["Sub_Category"].isin(selected_subcategories))]
+    df_selected = df[(df["Category"] == selected_category) & (df["Sub_Category"].isin(selected_subcategories))]
 else:
-    df_selected = df[df["Catgeory"] == selected_category]
+    df_selected = df[df["Category"] == selected_category]
 
 # 3. Show a line chart of sales for the selected items
 # Reset index in case Order_Date is set as the index for grouping
